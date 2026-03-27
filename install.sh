@@ -150,22 +150,66 @@ check_git() {
     fi
 }
 
-# 克隆或更新仓库
+# 克隆或更新仓库（从 GitHub Release 下载最新版）
 setup_repository() {
-    local REPO_URL="https://github.com/router-for-me/cli-proxy-api.git"
+    local REPO_OWNER="router-for-me"
+    local REPO_NAME="CLIProxyAPI"
     local INSTALL_DIR="/opt/cli-proxy-api"
     
-    if [[ -d "$INSTALL_DIR" ]]; then
-        log_info "检测到已存在的安装，正在更新..."
-        cd "$INSTALL_DIR"
-        git pull origin main
-        log_success "仓库更新完成"
+    log_info "正在获取最新 release 版本..."
+    
+    # 从 GitHub API 获取最新版本号
+    local LATEST_RELEASE=$(curl -s "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+    
+    if [[ -z "$LATEST_RELEASE" ]]; then
+        log_warn "无法获取最新版本号，尝试使用 main 分支压缩包"
+        LATEST_RELEASE="main"
+        local DOWNLOAD_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/heads/main.tar.gz"
     else
-        log_info "正在克隆仓库到 $INSTALL_DIR ..."
-        git clone "$REPO_URL" "$INSTALL_DIR"
-        cd "$INSTALL_DIR"
-        log_success "仓库克隆完成"
+        local DOWNLOAD_URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/tags/${LATEST_RELEASE}.tar.gz"
     fi
+    
+    log_info "最新版本：${LATEST_RELEASE}"
+    log_info "下载地址：${DOWNLOAD_URL}"
+    
+    if [[ -d "$INSTALL_DIR" ]]; then
+        log_info "检测到已存在的安装，正在更新到最新版本..."
+        # 备份配置文件
+        if [[ -f "$INSTALL_DIR/config.yaml" ]]; then
+            cp "$INSTALL_DIR/config.yaml" /tmp/config.yaml.bak
+            log_info "已备份配置文件"
+        fi
+        
+        # 删除旧目录并重新下载
+        rm -rf "$INSTALL_DIR"
+    else
+        log_info "正在下载安装包..."
+    fi
+    
+    # 创建临时目录下载
+    local TEMP_DIR=$(mktemp -d)
+    cd "$TEMP_DIR"
+    
+    # 下载并解压
+    curl -fsSL "$DOWNLOAD_URL" -o "${TEMP_DIR}/source.tar.gz"
+    tar -xzf "${TEMP_DIR}/source.tar.gz"
+    
+    # 移动文件到安装目录（GitHub 压缩包会多一层目录）
+    local EXTRACTED_DIR=$(ls -1 | grep "^${REPO_NAME}" | head -n1)
+    mv "$EXTRACTED_DIR" "$INSTALL_DIR"
+    
+    # 清理临时文件
+    cd /
+    rm -rf "$TEMP_DIR"
+    
+    # 恢复配置文件
+    if [[ -f /tmp/config.yaml.bak ]]; then
+        cp /tmp/config.yaml.bak "$INSTALL_DIR/config.yaml"
+        rm /tmp/config.yaml.bak
+        log_info "已恢复配置文件"
+    fi
+    
+    log_success "仓库安装/更新完成"
 }
 
 # 创建配置文件
@@ -258,7 +302,7 @@ main() {
     echo ""
     
     check_root
-    check_git
+    # 不再需要 Git，因为直接从 Release 下载
     check_docker
     check_docker_compose
     setup_repository
