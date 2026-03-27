@@ -68,10 +68,10 @@ Install CLIProxyAPI with a single command:
 
 ```bash
 # Using curl
-curl -fsSL https://raw.githubusercontent.com/router-for-me/cli-proxy-api/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/bobo334/CLIProxyAPI/main/install.sh | bash
 
 # Or using wget
-wget -qO- https://raw.githubusercontent.com/router-for-me/cli-proxy-api/main/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/bobo334/CLIProxyAPI/main/install.sh | bash
 ```
 
 The installation script will automatically:
@@ -82,7 +82,7 @@ The installation script will automatically:
 
 After installation, access the management panel at `http://localhost:8317`
 
-For more details, see [install.sh](https://github.com/router-for-me/cli-proxy-api/blob/main/install.sh)
+For more details, see [install.sh](https://github.com/bobo334/CLIProxyAPI/blob/main/install.sh)
 
 ### Manual Installation
 
