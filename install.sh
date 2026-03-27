@@ -56,6 +56,18 @@ check_docker() {
 }
 
 install_docker() {
+    # 先清理可能存在的错误 Docker 源（特别是 trixie 相关的 Ubuntu 源）
+    log_info "检查并清理错误的 Docker 源配置..."
+    if [[ -f /etc/apt/sources.list.d/docker.list ]]; then
+        if grep -q "trixie" /etc/apt/sources.list.d/docker.list 2>/dev/null; then
+            log_warn "检测到错误的 trixie 源配置，正在备份并删除..."
+            cp /etc/apt/sources.list.d/docker.list /etc/apt/sources.list.d/docker.list.bak.$(date +%s)
+            rm -f /etc/apt/sources.list.d/docker.list
+        fi
+    fi
+    # 清理其他可能的错误源文件
+    rm -f /etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list 2>/dev/null || true
+    
     if command -v apt-get &> /dev/null; then
         # Debian/Ubuntu
         log_info "检测到 Debian/Ubuntu 系统，正在安装 Docker..."
