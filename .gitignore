@@ -1,51 +1,71 @@
-# Binaries
-cli-proxy-api
-*.exe
-
-# Configuration
-config.yaml
+```bash
+# Environment
 .env
+.env.local
+.env.*
 
-# Generated content
-bin/*
-logs/*
-conv/*
-temp/*
-refs/*
+# Logs and temp files
+*.log
+*.tmp
+*.swp
 
-# Storage backends
-pgstore/*
-gitstore/*
-objectstore/*
+# Editors
+.vscode/
+.idea/
 
-# Static assets
-static/*
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+dist/
+build/
+target/
+.gradle/
 
-# Authentication data
-auths/*
-!auths/.gitkeep
+# Compiled files
+*.pyc
+*.class
+*.o
+*.exe
+*.dll
+*.so
+*.a
+*.obj
+*.out
 
-# Documentation
-docs/*
-AGENTS.md
-CLAUDE.md
-GEMINI.md
-
-# Tooling metadata
-.vscode/*
-.codex/*
-.claude/*
-.gemini/*
-.serena/*
-.agent/*
-.agents/*
-.agents/*
-.opencode/*
-.idea/*
-.bmad/*
-_bmad/*
-_bmad-output/*
-
-# macOS
+# System files
 .DS_Store
-._*
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+```
