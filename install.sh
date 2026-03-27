@@ -59,10 +59,24 @@ install_docker() {
     if command -v apt-get &> /dev/null; then
         # Debian/Ubuntu
         log_info "检测到 Debian/Ubuntu 系统，正在安装 Docker..."
-        apt-get update -qq
-        apt-get install -y -qq apt-transport-https ca-certificates curl gnupg lsb-release
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+        
+        # 检测具体发行版
+        if [ -f /etc/debian_version ]; then
+            # Debian 系统
+            log_info "检测到 Debian 系统"
+            apt-get update -qq
+            apt-get install -y -qq apt-transport-https ca-certificates curl gnupg lsb-release
+            curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+        else
+            # Ubuntu 系统
+            log_info "检测到 Ubuntu 系统"
+            apt-get update -qq
+            apt-get install -y -qq apt-transport-https ca-certificates curl gnupg lsb-release
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+        fi
+        
         apt-get update -qq
         apt-get install -y -qq docker-ce docker-ce-cli containerd.io
     elif command -v yum &> /dev/null; then
