@@ -62,6 +62,30 @@ Get 10% OFF GLM CODING PLAN：https://z.ai/subscribe?ic=8JVLJQFSKB
 
 ## Getting Started
 
+### One-Click Installation (Recommended)
+
+Install CLIProxyAPI with a single command:
+
+```bash
+# Using curl
+curl -fsSL https://raw.githubusercontent.com/router-for-me/cli-proxy-api/main/install.sh | bash
+
+# Or using wget
+wget -qO- https://raw.githubusercontent.com/router-for-me/cli-proxy-api/main/install.sh | bash
+```
+
+The installation script will automatically:
+- Check and install system dependencies (Docker, Docker Compose, Git)
+- Clone or update the code repository
+- Create configuration files with secure API keys
+- Start the service
+
+After installation, access the management panel at `http://localhost:8317`
+
+For more details, see [install.sh](https://github.com/router-for-me/cli-proxy-api/blob/main/install.sh)
+
+### Manual Installation
+
 CLIProxyAPI Guides: [https://help.router-for.me/](https://help.router-for.me/)
 
 ## Management API
